@@ -34,9 +34,8 @@ img {
   display: block;
 }
 
-
 /* ============= HOME SLIDER (TRƯỚC FORM ĐẶT XE) ============= */
-/* Slider cân đối cho PC + Mobile, không bị lệch/cắt ảnh */
+/* PC: banner nhỏ, cao ~280px – Mobile: không cắt ảnh, không lệch */
 .home-slider-wrap {
   position: relative;
   width: 100%;
@@ -56,12 +55,13 @@ img {
   flex-shrink: 0;
 }
 
+/* Mặc định: cho PC, cắt nhẹ như banner */
 .home-slide img,
 .home-slide-img {
   width: 100%;
-  height: auto;
+  height: 280px;
   display: block;
-  object-fit: contain;     /* không cắt ảnh */
+  object-fit: cover;
   object-position: center;
 }
 
@@ -90,21 +90,23 @@ img {
   transform: translateY(-50%) scale(1.05);
 }
 
-.home-slider-prev { left: 12px; }
-.home-slider-next { right: 12px; }
+.home-slider-prev { left: 16px; }
+.home-slider-next { right: 16px; }
 
+/* Mobile: không cắt ảnh, không bị lệch */
 @media (max-width: 600px) {
   .home-slider-wrap {
     max-width: 100%;
     margin: 0;
-    border-radius: 0;     /* mobile full chiều rộng */
+    border-radius: 0;
+    overflow: hidden;
   }
 
   .home-slide img,
   .home-slide-img {
     width: 100%;
     height: auto;
-    object-fit: contain;
+    object-fit: contain;        /* hiện đủ ảnh, không mất chữ bên phải */
     object-position: center;
   }
 
@@ -115,7 +117,7 @@ img {
   }
 }
 
-
+/* ================== LAYOUT CHUNG ================== */
 .container {
   width: 100%;
   max-width: 1200px;
@@ -1049,7 +1051,6 @@ footer {
   }
 }
 
-
 /* Nhóm chọn ngày + giờ khởi hành */
 .time-group {
   display: flex;
@@ -1069,7 +1070,7 @@ footer {
 
 .contact-widget {
   position: fixed;
-  right: 40px;  /* tăng lên để dịch sang trái */
+  right: 40px;
   bottom: 20px;
   z-index: 80;
   width: 56px;
@@ -1188,90 +1189,10 @@ footer {
   font-weight: 700;
 }
 
-/* Mobile: dịch lên chút cho khỏi đè vào nút khác nếu có */
-@media (max-width: 600px) {
-  .contact-widget {
-    right: 50px;   /* ĐẨY VÀO TRÁI NHIỀU HƠN */
-    bottom: 20px;
-  }
-}
-
-/* ======= ICON STYLE ======= */
-
-.toggle-icon {
-  position: absolute;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-}
-
-.messenger-icon {
-  top: 6px;
-  left: 6px;
-}
-
-.zalo-icon {
-  bottom: 6px;
-  right: 6px;
-}
-
-/* ICON nhỏ cho 4 nút bung ra */
-.icon-small {
-  width: 26px;
-  height: 26px;
-  object-fit: contain;
-}
-
-/* Cho nút call hình tròn đẹp */
-.contact-item img {
-  pointer-events: none;
-}
-
-/* ======= MAIN MENU ICON ======= */
-.menu-main-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  object-fit: cover;
-  position: absolute;
-  top: 7px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-/* ========== THU NHỎ SLIDER TRÊN MOBILE ========== */
+/* Mobile: dịch lên chút */
 @media (max-width: 600px) {
   .home-slider-wrap {
-    max-height: 200px;        /* khung banner thấp lại */
-  }
-
-  .home-slide img,
-  .home-slide-img {
-    width: 100%;
-    height: 220px;            /* chiều cao cố định ~200px */
-    object-fit: cover;        /* cắt nhẹ trên/dưới cho giống banner */
-    object-position: center;  /* cắt ở giữa, không bị lệch 1 bên */
-  }
-}
-/* ========== THU NHỎ SLIDER TRÊN PC ========== */
-@media (min-width: 768px) {
-  .home-slider-wrap {
-    max-width: 1000px;      /* banner không quá rộng */
-    max-height: 320px;      /* khung banner thấp lại */
-  }
-
-  .home-slide img,
-  .home-slide-img {
-    width: 100%;
-    height: 290px;          /* chiều cao cố định trên PC */
-    object-fit: cover;      /* cắt nhẹ trên/dưới cho gọn, không quá cao */
-    object-position: center;
-  }
-}
-
-/* ========== SLIDER TRÊN MOBILE VẪN THẤP ========== */
-@media (max-width: 600px) {
-  .home-slider-wrap {
-    max-height: 220px;
+    max-height: 200px;
   }
 
   .home-slide img,
@@ -1281,4 +1202,23 @@ footer {
     object-fit: cover;
     object-position: center;
   }
+}
+
+/* ICON nhỏ cho 4 nút bung ra */
+.icon-small {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+}
+
+/* MAIN MENU ICON */
+.menu-main-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  position: absolute;
+  top: 7px;
+  left: 50%;
+  transform: translateX(-50%);
 }
