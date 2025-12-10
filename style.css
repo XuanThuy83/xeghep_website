@@ -1251,3 +1251,59 @@ footer {
     display: block !important;
   }
 }
+/* === CHỐT HẠ: THU NHỎ SLIDER CHO PC + MOBILE CHO CÂN === */
+
+/* PC & tablet: banner không quá cao */
+@media (min-width: 768px) {
+  .home-slider-wrap {
+    max-width: 1000px !important;
+    height: 280px !important;
+    max-height: 280px !important;
+    margin: 10px auto 0 !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+  }
+
+  .home-slide img,
+  .home-slide-img {
+    width: 100% !important;
+    height: 280px !important;
+    object-fit: cover !important;       /* cắt nhẹ cho giống banner */
+    object-position: center center !important;
+    display: block !important;
+  }
+}
+
+/* MOBILE: banner thấp lại, không chiếm hết màn */
+@media (max-width: 767px) {
+  .home-slider-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 220px !important;
+    max-height: 220px !important;
+    margin: 0 auto !important;
+    border-radius: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .home-slide {
+    min-width: 100% !important;
+  }
+
+  .home-slide img,
+  .home-slide-img {
+    width: 100% !important;
+    height: 220px !important;           /* banner thấp hơn nhiều */
+    object-fit: cover !important;       /* full ngang, cắt vừa phải trên/dưới */
+    object-position: center center !important;
+    display: block !important;
+  }
+
+  .home-slider-btn {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 18px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+  }
+}
