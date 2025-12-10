@@ -36,10 +36,10 @@ img {
 
 
 /* ============= HOME SLIDER (TRƯỚC FORM ĐẶT XE) ============= */
+/* ========= SLIDER CÂN ĐỐI CHUẨN CHO PC + MOBILE ========= */
 .home-slider-wrap {
   position: relative;
   width: 100%;
-  max-height: 360px;
   overflow: hidden;
 }
 
@@ -51,20 +51,16 @@ img {
 .home-slide {
   min-width: 100%;
   flex-shrink: 0;
-  /* KHÔNG dùng background nữa */
 }
 
-/* Ảnh hiển thị trực tiếp, không ẩn */
 .home-slide img,
 .home-slide-img {
   width: 100%;
   height: auto;
   display: block;
-  opacity: 1;            /* <- đổi từ 0 thành 1 */
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
 }
-
-
 
 /* Nút điều hướng trái/phải */
 .home-slider-btn {
@@ -94,13 +90,15 @@ img {
 .home-slider-prev { left: 16px; }
 .home-slider-next { right: 16px; }
 
-@media (max-width: 720px) {
-  .home-slider-wrap {
-    max-height: 250px;
+@media (max-width: 600px) {
+  .home-slide img,
+  .home-slide-img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    object-position: center;
   }
-  .home-slide img {
-    max-height: 250px;
-  }
+
   .home-slider-btn {
     width: 34px;
     height: 34px;
@@ -1248,6 +1246,50 @@ footer {
   .home-slider-btn {
     width: 34px;
     height: 34px;
+    font-size: 18px;
+  }
+}
+/* ========== OVERRIDE KÍCH THƯỚC SLIDER CHO ĐẸP HƠN ========== */
+
+/* Khung slider: canh giữa, không quá to trên desktop */
+.home-slider-wrap {
+  max-width: 1000px;      /* slider nhỏ lại, không full màn hình */
+  margin: 10px auto 0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Ảnh trên desktop: nhỏ, gọn, không bị méo */
+.home-slide img,
+.home-slide-img {
+  width: 100%;
+  height: 260px;          /* chiều cao cố định, không quá to */
+  object-fit: cover;      /* cắt nhẹ 2 bên cho cân */
+  object-position: center;
+}
+
+/* Nút điều hướng giữ nguyên, chỉ căn lại chút */
+.home-slider-prev { left: 12px; }
+.home-slider-next { right: 12px; }
+
+/* MOBILE: cho ảnh đỡ lệch, bớt cao, nhìn cân hơn */
+@media (max-width: 600px) {
+  .home-slider-wrap {
+    max-width: 100%;
+    margin: 8px auto 0;
+    border-radius: 0;     /* mobile thường full chiều rộng, bỏ bo góc cũng được */
+  }
+
+  .home-slide img,
+  .home-slide-img {
+    height: 190px;        /* thấp hơn chút để không bị dài quá */
+    object-fit: cover;    /* full bề ngang, không thừa khoảng trắng 2 bên */
+    object-position: center;
+  }
+
+  .home-slider-btn {
+    width: 32px;
+    height: 32px;
     font-size: 18px;
   }
 }
