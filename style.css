@@ -1222,3 +1222,32 @@ footer {
   left: 50%;
   transform: translateX(-50%);
 }
+/* ==== FIX CUỐI CÙNG: MOBILE KHÔNG PHÓNG TO, KHÔNG CẮT ẢNH ==== */
+@media (max-width: 767px) {
+  .home-slider-wrap {
+    max-width: 100% !important;
+    max-height: none !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+  }
+
+  .home-slider {
+    display: flex !important;
+  }
+
+  .home-slide {
+    min-width: 100% !important;
+    flex-shrink: 0 !important;
+  }
+
+  .home-slide img,
+  .home-slide-img {
+    width: 100% !important;
+    height: auto !important;            /* KHÔNG cố định chiều cao */
+    max-height: none !important;
+    object-fit: contain !important;     /* Không zoom, không cắt */
+    object-position: center center !important;
+    display: block !important;
+  }
+}
