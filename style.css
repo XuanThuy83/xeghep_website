@@ -1226,12 +1226,19 @@ footer {
   transform: translateX(-50%);
 }
 @media (max-width: 600px) {
+  .home-slider-wrap {
+    max-height: none;     /* Bỏ giới hạn chiều cao trên mobile */
+  }
+
   .home-slide img {
     width: 100%;
     height: auto;
-    object-fit: cover;
+    max-height: none;
+    object-fit: contain;  /* hoặc xoá hẳn dòng này */
+    object-position: center;
   }
 }
+
 .slider img {
   width: 100%;
   height: auto;           /* Đừng đặt chiều cao cố định */
