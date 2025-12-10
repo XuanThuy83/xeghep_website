@@ -1232,4 +1232,26 @@ footer {
     object-fit: cover;
   }
 }
+.slider img {
+  width: 100%;
+  height: auto;           /* Đừng đặt chiều cao cố định */
+  object-fit: contain;    /* hoặc bỏ hẳn object-fit nếu có */
+  object-position: center;
+}
+/* Desktop giữ cover */
+.slider img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Mobile giảm việc cắt ảnh */
+@media (max-width: 600px) {
+  .slider img {
+    height: auto;
+    object-fit: contain;  /* hoặc bỏ object-fit */
+  }
+}
+
 
