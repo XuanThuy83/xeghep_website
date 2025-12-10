@@ -36,6 +36,7 @@ img {
 
 
 /* ============= HOME SLIDER (TRƯỚC FORM ĐẶT XE) ============= */
+/* ============= HOME SLIDER (TRƯỚC FORM ĐẶT XE) ============= */
 .home-slider-wrap {
   position: relative;
   width: 100%;
@@ -51,34 +52,31 @@ img {
 .home-slide {
   min-width: 100%;
   flex-shrink: 0;
-  /* KHÔNG dùng background nữa */
 }
 
-/* Ảnh hiển thị trực tiếp, không ẩn */
+/* Ảnh hiển thị trực tiếp */
 .home-slide img,
 .home-slide-img {
   width: 100%;
   height: auto;
   display: block;
-  opacity: 1;            /* <- đổi từ 0 thành 1 */
+  opacity: 1;           /* <<< QUAN TRỌNG: phải là 1 */
   object-fit: cover;
 }
 
-
-
-/* Nút điều hướng trái/phải */
+/* Nút điều khiển trái/phải */
 .home-slider-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
   border: none;
-  cursor: pointer;
-  background: rgba(0,0,0,0.35);
+  background: rgba(0,0,0,0.55);
   color: #fff;
   font-size: 20px;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -100,6 +98,7 @@ img {
   }
   .home-slide img {
     max-height: 250px;
+    object-fit: cover;
   }
   .home-slider-btn {
     width: 34px;
@@ -108,13 +107,6 @@ img {
   }
 }
 
-
-.container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 16px;
-}
 
 /* HEADER */
 header {
