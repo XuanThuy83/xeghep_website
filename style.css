@@ -1319,3 +1319,13 @@ footer {
     height: 80px;      /* Mobile */
   }
 }
+/* Giá tuyến sân bay Nội Bài */
+.price-value.airport {
+  font-weight: 800;
+  color: #dc2626; /* đỏ nhẹ, rất nổi */
+}
+/* In đậm ô chọn Sân bay Nội Bài */
+select.airport-select {
+  font-weight: 700;
+  color: #111827;
+}

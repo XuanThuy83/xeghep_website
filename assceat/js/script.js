@@ -1,16 +1,13 @@
 function scrollToSection(id) {
   const el = document.getElementById(id);
-  if (el) {
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
+  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  // ========== FORM ĐẶT XE ==========
+  // ========== FORM ==========
   const bookingForm = document.getElementById("bookingForm");
   const contactForm = document.getElementById("contactForm");
   const dateInput = document.querySelector('input[name="date"]');
-  const timeSlotSelect = document.querySelector('select[name="time_slot"]');
 
   // Khóa ngày đã trôi qua
   if (dateInput) {
@@ -29,9 +26,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const toSelect = document.querySelector('select[name="to"]');
   const priceValue = document.querySelector(".price-value");
 
-  
+  // GIỮ NGUYÊN các tuyến xe ghép tỉnh–tỉnh (theo bạn: "còn lại giữ nguyên")
+  // Cập nhật HN-HN theo giá mới: 150-200k
   const PRICE_MAP = {
-    "HN-HN": "150.000 – 250.000đ/chuyến (nội thành Hà Nội)",
+    "HN-HN": "150.000 – 200.000đ (nội thành Hà Nội)",
     "HP-HP": "120.000 – 200.000đ/chuyến (nội thành Hải Phòng)",
 
     // Hà Nội ⇌ Hải Phòng
@@ -45,15 +43,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // Hải Phòng ⇌ Quảng Ninh
     "HP-QN": "450.000 – 600.000đ/chuyến",
     "QN-HP": "450.000 – 600.000đ/chuyến",
-
-    // Sân bay Nội Bài → Hà Nội / Hải Phòng / Quảng Ninh
-    "NB-HN": "300.000 – 350.000đ/chuyến",
-    "NB-HP": "900.000đ/chuyến",
-    "NB-QN": "1.200.000đ/chuyến",
   };
 
-
-  
   function getCity(code) {
     if (!code) return null;
     if (code.startsWith("HN-")) return "HN";
@@ -62,7 +53,6 @@ document.addEventListener("DOMContentLoaded", function () {
     if (code.startsWith("NB-")) return "NB";
     return null;
   }
-
 
   function resetOptions(select) {
     Array.from(select.options).forEach(function (opt) {
@@ -82,30 +72,26 @@ document.addEventListener("DOMContentLoaded", function () {
       if (!opt.value) return;
       const optCity = getCity(opt.value);
       if (!optCity) return;
-      if (optCity === city) {
-        opt.hidden = true;
-      }
+      if (optCity === city) opt.hidden = true;
     });
 
     if (targetSelect.value) {
       const targetCity = getCity(targetSelect.value);
-      if (targetCity === city) {
-        targetSelect.value = "";
-      }
+      if (targetCity === city) targetSelect.value = "";
     }
   }
 
+  // ====== UPDATE GIÁ (đã chỉnh theo yêu cầu mới) ======
   function updatePrice() {
     if (!priceValue || !fromSelect || !toSelect) return;
+
+    // reset style “sân bay”
+    priceValue.classList.remove("airport");
 
     const serviceInput = document.querySelector('input[name="service"]:checked');
     const service = serviceInput ? serviceInput.value : "xe-ghep";
 
-    if (service === "bao-xe") {
-      priceValue.textContent = "900.000đ/bao xe";
-      return;
-    }
-
+    // Gửi đồ
     if (service === "gui-do") {
       priceValue.textContent = "Gửi đồ: giá theo thị trường – gọi hotline.";
       return;
@@ -119,6 +105,53 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
+    // ===== NỘI THÀNH HÀ NỘI: ghép & bao đều 150-200k =====
+    if (fromCity === "HN" && toCity === "HN") {
+      priceValue.textContent = "150.000 – 200.000đ";
+      return;
+    }
+
+    // ===== SÂN BAY NỘI BÀI =====
+    // NB ⇄ HN: ghép & bao đều 150-200k
+    if (
+      (fromCity === "NB" && toCity === "HN") ||
+      (fromCity === "HN" && toCity === "NB")
+    ) {
+      priceValue.textContent = "150.000 – 200.000đ";
+      priceValue.classList.add("airport");
+      return;
+    }
+
+    // NB → HP: ghép 350-400k, bao 900k
+    if (fromCity === "NB" && toCity === "HP") {
+      priceValue.classList.add("airport");
+      if (service === "bao-xe") {
+        priceValue.textContent = "900.000đ (bao xe)";
+      } else {
+        priceValue.textContent = "350.000 – 400.000đ (ghép xe)";
+      }
+      return;
+    }
+
+    // NB → QN: ghép 450-600k, bao 1.200k
+    if (fromCity === "NB" && toCity === "QN") {
+      priceValue.classList.add("airport");
+      if (service === "bao-xe") {
+        priceValue.textContent = "1.200.000đ (bao xe)";
+      } else {
+        priceValue.textContent = "450.000 – 600.000đ (ghép xe)";
+      }
+      return;
+    }
+
+    // ===== CÁC TUYẾN KHÁC =====
+    // Bao xe (ngoài các case sân bay ở trên): giữ như cũ 900k/bao xe
+    if (service === "bao-xe") {
+      priceValue.textContent = "900.000đ/bao xe";
+      return;
+    }
+
+    // Xe ghép tỉnh–tỉnh giữ nguyên theo PRICE_MAP
     const key = fromCity + "-" + toCity;
     if (PRICE_MAP[key]) {
       priceValue.textContent = PRICE_MAP[key];
@@ -127,6 +160,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // Lắng nghe đổi dịch vụ
   const serviceRadios = document.querySelectorAll('input[name="service"]');
   if (serviceRadios.length) {
     serviceRadios.forEach(function (radio) {
@@ -134,6 +168,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // Lắng nghe đổi điểm đi/đến
   if (fromSelect && toSelect) {
     fromSelect.addEventListener("change", function () {
       filterSelect(fromSelect, toSelect);
@@ -146,11 +181,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  
   // ====== TAB SÂN BAY: SÂN BAY NỘI BÀI → HÀ NỘI / HẢI PHÒNG / QUẢNG NINH ======
   const tabs = document.querySelectorAll(".booking-tab");
 
-  // danh sách quận/huyện để render option nhanh
   const DISTRICTS = {
     HN: [
       "Ba Đình","Hoàn Kiếm","Hai Bà Trưng","Đống Đa","Tây Hồ","Cầu Giấy","Thanh Xuân",
@@ -180,17 +213,17 @@ document.addEventListener("DOMContentLoaded", function () {
   function switchToAirportMode() {
     if (!fromSelect || !toSelect) return;
 
-    // Điểm đi cố định: Sân bay Nội Bài
-    fromSelect.innerHTML =
-      '<option value="NB-NoiBai">Sân bay Nội Bài (HAN)</option>';
+    fromSelect.innerHTML = '<option value="NB-NoiBai">Sân bay Nội Bài (HAN)</option>';
     fromSelect.value = "NB-NoiBai";
     fromSelect.disabled = true;
-
-    // Điểm đến: Hà Nội + Hải Phòng + Quảng Ninh
+     // 👉 IN ĐẬM Ô CHỌN SÂN BAY
+    fromSelect.classList.add("airport-select");
+    
     let html = "";
     html += '<optgroup label="Hà Nội">' + renderDistrictOptions("HN") + "</optgroup>";
     html += '<optgroup label="Hải Phòng">' + renderDistrictOptions("HP") + "</optgroup>";
     html += '<optgroup label="Quảng Ninh">' + renderDistrictOptions("QN") + "</optgroup>";
+
     toSelect.innerHTML = '<option value="">Chọn điểm đến</option>' + html;
     toSelect.value = "";
     toSelect.disabled = false;
@@ -199,18 +232,18 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function switchToNormalMode() {
-    if (!fromSelect || !toSelect) return;
-    // reload lại trang để dùng danh sách gốc trong HTML
     window.location.reload();
   }
 
   if (tabs && tabs.length > 0) {
     tabs.forEach(function (tab) {
       tab.addEventListener("click", function () {
-        tabs.forEach(function (t) { t.classList.remove("active"); });
+        tabs.forEach(function (t) {
+          t.classList.remove("active");
+        });
         tab.classList.add("active");
-        const type = tab.dataset.type;
 
+        const type = tab.dataset.type;
         if (type === "san-bay") {
           switchToAirportMode();
         } else {
@@ -220,14 +253,12 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-// ====== NÚT "Xem trên bản đồ" → Google Maps ======
+  // ====== NÚT "Xem trên bản đồ" → Google Maps ======
   const mapBtn = document.querySelector(".price-map-btn");
   if (mapBtn && fromSelect && toSelect) {
     mapBtn.addEventListener("click", function () {
       if (!fromSelect.value || !toSelect.value) {
-        alert(
-          "Vui lòng chọn đầy đủ điểm đi và điểm đến trước khi xem trên bản đồ."
-        );
+        alert("Vui lòng chọn đầy đủ điểm đi và điểm đến trước khi xem trên bản đồ.");
         return;
       }
 
@@ -248,10 +279,11 @@ document.addEventListener("DOMContentLoaded", function () {
         if (code === "HN") return "Hà Nội";
         if (code === "HP") return "Hải Phòng";
         if (code === "QN") return "Quảng Ninh";
+        if (code === "NB") return "Sân bay Nội Bài";
         return "";
       }
 
-      const originFull = fromName + ", " + cityLabel(fromCity);
+      const originFull = fromName + (fromCity !== "NB" ? ", " + cityLabel(fromCity) : "");
       const destFull = toName + ", " + cityLabel(toCity);
 
       const url =
@@ -265,14 +297,14 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ====== HÀM CHECK MOBILE ======
+  // ====== CHECK MOBILE ======
   function isMobile() {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
       navigator.userAgent
     );
   }
 
-  // ====== NÚT "ĐẶT XE NGAY" CŨ (trên header & cột cam kết) ======
+  // ====== NÚT "ĐẶT XE NGAY" (header & cột cam kết) ======
   const callButtons = document.querySelectorAll(".btn-call");
   if (callButtons.length > 0) {
     callButtons.forEach(function (btn) {
@@ -281,9 +313,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (isMobile()) {
           window.location.href = "tel:0945983789";
         } else {
-          alert(
-            "Vui lòng gọi hotline: 0945 983 789 (qua điện thoại hoặc Zalo)."
-          );
+          alert("Vui lòng gọi hotline: 0945 983 789 (qua điện thoại hoặc Zalo).");
         }
       });
     });
@@ -308,9 +338,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (isMobile()) {
         window.location.href = "tel:0945983789";
       } else {
-        alert(
-          "Vui lòng gọi hotline: 0945 983 789 (qua điện thoại hoặc Zalo)."
-        );
+        alert("Vui lòng gọi hotline: 0945 983 789 (qua điện thoại hoặc Zalo).");
       }
     });
   }
@@ -323,9 +351,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (isMobile()) {
         window.location.href = "sms:0945983789";
       } else {
-        alert(
-          "Soạn SMS gửi 0945 983 789 với nội dung đặt xe của bạn trên điện thoại."
-        );
+        alert("Soạn SMS gửi 0945 983 789 với nội dung đặt xe của bạn trên điện thoại.");
       }
     });
   }
@@ -335,7 +361,6 @@ document.addEventListener("DOMContentLoaded", function () {
   if (btnZalo) {
     btnZalo.addEventListener("click", function (e) {
       e.preventDefault();
-      // Đổi lại link Zalo của bạn nếu cần
       window.open("https://zalo.me/0945983789", "_blank");
     });
   }
@@ -345,7 +370,6 @@ document.addEventListener("DOMContentLoaded", function () {
   if (btnMessenger) {
     btnMessenger.addEventListener("click", function (e) {
       e.preventDefault();
-      // Đổi "ten_fanpage_cua_ban" thành ID/page của bạn
       window.open("https://m.me/ten_fanpage_cua_ban", "_blank");
     });
   }
@@ -363,8 +387,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function showSlide(index) {
       const offset = index * 100;
-     sliderTrack.style.transform = `translateX(-${offset}%)`;
-  document.documentElement.style.setProperty("--slide-index", currentIndex);
+      sliderTrack.style.transform = `translateX(-${offset}%)`;
+      document.documentElement.style.setProperty("--slide-index", currentIndex);
     }
 
     function nextSlide() {
@@ -407,14 +431,13 @@ document.addEventListener("DOMContentLoaded", function () {
       const endX = e.changedTouches[0].clientX;
       const delta = endX - startX;
       if (Math.abs(delta) > 40) {
-        if (delta < 0) {
-          nextSlide();
-        } else {
-          prevSlide();
-        }
+        if (delta < 0) nextSlide();
+        else prevSlide();
         resetAuto();
       }
     });
   }
 
+  // Gọi update lần đầu
+  updatePrice();
 });
