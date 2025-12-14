@@ -45,8 +45,31 @@ document.addEventListener("DOMContentLoaded", function () {
       e.preventDefault();
 
       const formData = new FormData(this);
-      const from = formData.get("from");
-      const to = formData.get("to");
+      const fromSelect = document.querySelector('select[name="from"]');
+      const toSelect = document.querySelector('select[name="to"]');
+
+      // FormData sẽ không lấy field bị disabled => fallback lấy trực tiếp từ select
+      let from = formData.get("from") || (fromSelect ? fromSelect.value : "");
+      let to = formData.get("to") || (toSelect ? toSelect.value : "");
+
+      // Lấy tên hiển thị (text) để gửi Telegram cho đẹp
+      let fromLabel = "";
+      let toLabel = "";
+
+      if (fromSelect && fromSelect.selectedIndex >= 0) {
+        fromLabel = fromSelect.options[fromSelect.selectedIndex].text.trim();
+      }
+      if (toSelect && toSelect.selectedIndex >= 0) {
+        toLabel = toSelect.options[toSelect.selectedIndex].text.trim();
+      }
+
+      // Nếu vẫn rỗng (trường hợp sân bay) thì set mặc định
+      if (!from || from === "null") from = "NB-NoiBai";
+      if (!fromLabel) fromLabel = "Sân bay Nội Bài (HAN)";
+
+      // Nếu bạn muốn vẫn giữ dạng mã tuyến thì dùng from/to
+      // Còn nếu muốn hiển thị rõ ràng thì dùng fromLabel/toLabel:
+
       const phone = formData.get("phone");
       const name = formData.get("name");
       const date = formData.get("date");
@@ -62,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
         `<b>📌 Có đơn đặt xe mới</b>\n\n` +
         `• <b>Tên:</b> ${name}\n` +
         `• <b>SĐT:</b> ${phone}\n` +
-        `• <b>Tuyến:</b> ${from} → ${to}\n` +
+        `• <b>Tuyến:</b> ${fromLabel || from} → ${toLabel || to}\n` +
         (timeText ? `• <b>Thời gian:</b> ${timeText}\n` : "") +
         `• <b>Dịch vụ:</b> ${service}\n`;
 
