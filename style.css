@@ -1307,3 +1307,15 @@ footer {
     transform: translateY(-50%) !important;
   }
 }
+/* ===== LOGO IMAGE ===== */
+.logo-img {
+  height: 80px;        /* PC */
+  width: auto;
+  object-fit: contain;
+}
+
+@media (max-width: 600px) {
+  .logo-img {
+    height: 80px;      /* Mobile */
+  }
+}
